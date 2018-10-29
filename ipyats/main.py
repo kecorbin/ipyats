@@ -1,6 +1,5 @@
 import argparse
 import os
-import logging
 from IPython import embed
 
 from genie.conf import Genie
@@ -9,24 +8,20 @@ from genie.abstract import Lookup # noqa
 from genie.libs import ops, conf # noqa
 from genie.utils.diff import Diff # noqa
 
-import ipyats.tasks as tasks
-
+import ipyats.tasks as tasks # noqa
+from ipyats.utils import show_source  # noqa
 
 import ipyats.public_testbeds
 
 
 def main():
-    # local imports
-
 
     parser = argparse.ArgumentParser(description="standalone parser")
     parser.add_argument('--testbed', dest='testbed', type=loader.load)
-
     args, unknown = parser.parse_known_args()
 
     if not args.testbed:
-        print ("""
-
+        print("""
     **************************************************************
     You didn't specify a testbed, we'll load up a Devnet sandbox.
 
@@ -46,14 +41,12 @@ def main():
         testbed = Genie.init(args.testbed)
 
     print("""
+    Welcome to ipyATS!
 
-    Welcome to the testbed object tutorial, your testbed is now available
-
-    as the `testbed` object
-
+    your testbed is now available as the `testbed` object
 
     You can start by exploring some of the common operations available for the
-    device by typing
+    testbed by typing
 
     dir(testbed)
 
@@ -62,29 +55,28 @@ def main():
 
     dir(tasks)
 
+    You can checkout the source code for any of these funtions by passing
+    them to show_source
+
+    e.g show_source(tasks.get_routing_table)
     """)
 
     # if it's sandbox, these will come in handy
     if testbed.name == "devnet_always_on_sandbox":
-        csr = testbed.devices['csr1000v']
-        nx = testbed.devices['sbx-n9kv-ao']
-
+        csr = testbed.devices['csr1000v'] # noqa
+        nx = testbed.devices['sbx-n9kv-ao'] # noqa
         print("""
-
     Detected Always-On Sandbox, creating some handy objects
-
 
     Created objects `csr` and `nx`")
 
     csr = testbed.devices['csr1000v']
     nx = testbed.devices['sbx-n9kv-ao']
-
     """)
-
 
     # bail to iPython
     embed()
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     main()
